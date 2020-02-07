@@ -1,0 +1,30 @@
+fourthrows <- function(){
+  if(sum( sample(1:6,size = 4,replace = T) == 6) == 1){
+    return (1)
+  }
+  else {
+    return (0)
+    }
+} 
+twentyfourthrows <- function(){
+  if(sum( sample(1:6,size = 24,replace = T) == 6) == 2){
+    return (1)
+  }
+  else {
+    return (0)
+  }
+} 
+
+meresix <- function(nsim){
+  for(i in 1:nsim){
+    four <- 0
+    twenty <-0
+    four <- fourthrows()+four
+    twenty <- twentyfourthrows() + twenty
+  }
+ print(four) 
+ print(twenty) 
+}
+
+meresix(1000000)
+
