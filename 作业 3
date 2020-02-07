@@ -27,4 +27,3 @@ meresix <- function(nsim){
 }
 
 meresix(1000000)
-
