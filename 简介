@@ -1,0 +1,65 @@
+  a <- c(1.8, 4.5) 
+  b <- c(1+2i, 3-6i)
+  d <- c(23, 44)
+  e <- vector("logical", length = 5)#逻辑型 长度为5的空向量
+  f <- c(TRUE , 24)#强制类型转换
+  g <- c(2.5, "may")
+  class(a)    #检查向量类型
+  bar <- 0:5  # 生成0~5的序列
+  class(bar)
+  as.character(bar)  #类型转换
+  class(as.character(bar))
+  
+  #列表
+  my_list <- list(22,"ab",TRUE,1+2i)
+  my_list
+  my_list[[3]]  #调用第三个元素 得到向量
+  my_list[3]    #得到一个列表 元素是一个向量
+  
+  #矩阵
+  my_matrix <- matrix(1:6, nrow = 3, ncol = 2) #3行2列
+  my_matrix   
+  dim(my_matrix)   #维度
+  attributes(my_matrix)$dim    #维度
+  my_matrix[,1]  #调用第一例
+  my_matrix[1,]  #调用第二行
+  x <- c(6,5,4,3,2,1)   
+  y <- c(21,32,43,54,65,76)
+  cbind(x,y)   #
+  
+  n <- 10
+  
+  if (n>15){
+    print("true")
+  }else{
+    print("false")
+  }
+  
+  y <- c(12,34,56,78,90)
+  
+  for(i in 1:4){print (y[i])}
+  
+  age <- 12
+  
+  while (age < 17){
+    print(age)
+    age <- age +1
+  }
+  
+  
+  mean.and.sd <- function(x){
+    av <- mean(x)
+    sdev <- sd(x)
+    c(mean=av,SD=sdev) 
+  }
+  d<-c(148.155,589,236,456,411,561)
+  mean.and.sd(d)  #均值和标准差
+  
+  
+  mean.and.sd <- function(x = rnorm(10)){    #设置默认值
+    av <- mean(x)
+    sdev <- sd(x)
+    return(list(mean=av,SD=sdev)) 
+  }
+  
+  mean.and.sd()
