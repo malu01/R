@@ -1,0 +1,35 @@
+library(ElemStatLearn)#加载包及数据
+data(prostate)
+prostate$gleason <- ifelse(prostate$gleason == 6,0,1) #将gleason变成二分变量 6=0；其余=1
+prostate.train <- subset(prostate , train == TRUE)[, 1:9] #测试/训练集
+prostate.test <- subset(prostate , train == FALSE)[, 1:9]
+
+library(tree) 
+tree.pros <- tree(lpsa ~., data = prostate.train)#~:建模，"."表示所有数据。
+tree.pros
+dev.new()
+plot(tree.pros,col=8)#绘图
+text(tree.pros,digits = 2)#标记  digits：偏差值
+tree.proscut <- prune.tree(tree.pros)#修建
+dev.new()
+plot(tree.proscut) #树的大小与偏差值图像
+
+set.seed(2)
+cvtree.pros <- cv.tree(tree.pros,K = 10) #cv。十折交叉验证
+cvtree.pros   #size 大小   dev 偏差值 
+dev.new()
+plot(cvtree.pros,pch = 21,bg=8,type="b",cex = 1.5,ylim=c(45,120))
+tree.proscut <- prune.tree(tree.pros,best = 5) #观察图像 选取叶节点为5
+tree.proscut
+dev.new()
+plot(tree.proscut,col = 8)
+text(tree.proscut)
+
+plot(prostate[ ,c("lcavol","lweight")],cex = 0.02*exp(prostate$lpsa)) #两变量为主枝，将两变量绘平面图
+abline(v=c(-0.4786,1.0508,2.7917),col = 4,lwd = 5)
+lines(x=c(1.0508,2.7917), y=rep(3.0657,2),col = 4,lwd = 1.5)#并用蓝线表示树的结构
+
+tree.pros.text <- predict(tree.proscut, newdata = prostate.test)#对测试集做预测
+tree.resid <- prostate.test$lpsa - tree.pros.text #残差
+tree.mse <- mean(tree.resid^2) #均方误差
+tree.mse
