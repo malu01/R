@@ -1,0 +1,51 @@
+#回归问题
+library(randomForest)#bagging and random forest
+library(ElemStatLearn)
+data(prostate)
+prostate$gleason <- ifelse(prostate$gleason == 6, 0, 1)
+pros.train <- subset(prostate, train == TRUE)[,1:9]
+pros.test <- subset(prostate, train == FALSE)[,1:9]
+
+#bagging
+set.seed(1)
+bag.pros <- randomForest(lpsa~., data=pros.train, mtry=8, importance = T)#lpsa作为响应变量，importance=t 计算每个变量在模型中的重要性
+bag.pros
+
+bag.pros.test <- predict(bag.pros,newdata = pros.test)#测试集
+bag.resid <- pros.test$lpsa - bag.pros.test#残差
+bag.mse <- mean(bag.resid^2)#均方误差
+bag.mse
+
+#random forest     代码基本同上
+set.seed(1)
+bag.pros <- randomForest(lpsa~., data=pros.train, mtry=3, importance = T)#mtry较小，不使用所有变量
+bag.pros
+
+bag.pros.test <- predict(bag.pros,newdata = pros.test)
+bag.resid <- pros.test$lpsa - bag.pros.test
+bag.mse <- mean(bag.resid^2)
+bag.mse
+
+#分类问题
+library(MASS)
+library(tree)
+data(biopsy)
+biopsy <- biopsy[,-1]#删去ID参数
+biopsy2 <- na.omit(biopsy) #删去缺失值
+
+set.seed(123)
+ind <- sample(2,nrow(biopsy2),replace = T, prob = c(0.7,0.3))
+biop.train <- biopsy2[ind == 1,]#training
+biop.test <-biopsy2[ind == 2,]#test
+
+set.seed(1)
+bag.biop <- randomForest(class~., data = biop.train, mtry=9, importance = T)
+bag.biop
+bag.biop.test <- predict(bag.biop,biop.test,type = 'class')#测试集做预测
+table(bag.biop.test,biop.test$class)#混淆矩阵
+
+set.seed(1)
+bag.biop <- randomForest(class~., data = biop.train, mtry=3, importance = T)
+bag.biop
+bag.biop.test <- predict(bag.biop,biop.test,type = 'class')
+table(bag.biop.test,biop.test$class)
