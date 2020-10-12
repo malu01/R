@@ -1,0 +1,34 @@
+library(quantmod)
+library(lubridate)
+
+StartDay <- lubridate::ymd("2020-01-01")#设置启示和终止时间
+EndDay <- Sys.Date()
+
+#抓取google从一月一日到当天的股价情况
+getSymbols("GOOG",from = StartDay,to = EndDay,,src = "yahoo")
+
+#计算收益率
+close <- GOOG[,4]#提取收盘价
+c <- c(diff(close))#计算差值
+c[1] <- 0 
+rate <- c/close#计算收益率
+
+day <- index(rate) #提取纵坐标名称（时间）
+
+windows()#绘图
+par(mfcol=c(2,1))#分图
+plot(day,rate,cex = 0.01,col='red')
+lines(day,rate,col='red')
+title('Google')
+#如上抓取并绘制Apple的收益率曲线
+getSymbols("AAPL",from = StartDay,to = EndDay,,src = "yahoo")
+close1 <- AAPL[,4]
+c <- c(diff(close1))
+c[1] <- 0 
+rate1 <- c/close1
+day1 <- index(rate1)
+plot(day1,rate1,col='blue',cex = 0.01)
+lines(day1,rate1,col='blue')
+title('Apple')
+
+cor.test(coredata(rate),coredata(rate1),method = 'spearman') #计算相关系数
